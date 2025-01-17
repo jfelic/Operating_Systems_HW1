@@ -1,0 +1,4 @@
+lines.txt:
+- A line is defined by two points
+- Each point is separated by a comma
+- 
