@@ -17,36 +17,7 @@
 // Main function 
 // parameters:	argc --- number of arguments suppled by user on command-line
 //		argv --- array of command-line argument values
-int main(int argc, char** argv) {
-	// Step 2. 
-	// Allocate needed memory for an array of line_t
-	line_t* line_array = (line_t*)malloc(TOTAL_LINES * sizeof(line_t));
 
-	// Step 3.
-	if (argc != 2) {
-		printf("Please indicate a file name\n");
-		printf("For example: %s <filename>\n", argv[0]);
-		return 1;
-	}
-
-	// Check if memory allocation was successful
-	if (line_array == NULL) {
-		printf("Error: Memory allocation failed\n");
-		return 1;
-	}
-
-	// Step 4.
-	int lines_read = read_lines(argv[1], line_array, TOTAL_LINES);
-
-	for(int i = 0; i < lines_read; i++) {
-		printf("Line %d: p0(%.2f, %.2f), p1(%.2f, %.2f)\n", 
-			i, 
-			line_array[i].p0.x, line_array[i].p0.y,
-			line_array[i].p1.x, line_array[i].p1.y
-		);
-	}
-
-	free(line_array);
   /*
     steps to be performed
         1. declare needed variables
@@ -86,6 +57,44 @@ int main(int argc, char** argv) {
 	    1.41,0.79,45.00,(0.00,0.00),"%s", line(1.00,1.00)
 	    2.83,-0.79,-45.00,(-1.00,1.00),(1.00,-1.00)
   */
+ 
+int main(int argc, char** argv) {
+	// Step 2. 
+	// Allocate needed memory for an array of line_t
+	line_t* line_array = (line_t*)malloc(TOTAL_LINES * sizeof(line_t));
+
+	// Step 3.
+	if (argc != 2) {
+		printf("Please indicate a file name\n");
+		printf("For example: %s <filename>\n", argv[0]);
+		return 1;
+	}
+
+	// Check if memory allocation was successful
+	if (line_array == NULL) {
+		printf("Error: Memory allocation failed\n");
+		return 1;
+	}
+
+	// Step 4.
+	int lines_read = read_lines(argv[1], line_array, TOTAL_LINES);
+
+	// Loop through our array of line_t structs
+	for (int i = 0; i < lines_read; i++) {
+		double magnitude = calc_magnitude(&line_array[i]);
+		double direction_radians = calc_direction(&line_array[i]);
+		double direction_degrees = direction_radians * (180.0 / PI);
+
+		// Print results with the format that was specified above
+		printf("%.2f,%.2f,%.2f,(%.2f,%.2f),(%.2f,%.2f)\n",
+			magnitude,
+			direction_radians,
+			direction_degrees,
+			line_array[i].p0.x, line_array[i].p0.y,
+			line_array[i].p1.x, line_array[i].p1.y);
+	}
+
+	free(line_array);
 
   return 0;   // main must return an int --- zero means "no errors"
 }
