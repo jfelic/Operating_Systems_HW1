@@ -34,8 +34,8 @@ int read_lines(char* filename, line_t* line_arr, int n) {
     FILE* fp;
     char line[256];
     int line_count = 0;
-    char* current_char; // current char
-    double val;
+    // char* current_char; // current char
+    // double val;
 
     fp = fopen(filename, "r");
     if (fp == NULL) {
@@ -46,10 +46,35 @@ int read_lines(char* filename, line_t* line_arr, int n) {
     while(fgets(line, 255, fp) != NULL && line_count < n) {
         line_count++;
 
-        // Grab the first value
-        current_char = line; // current_char now points to first char of line
-        val = atof(current_char); // convert char that current_char points to a double
-        printf("val = %f\n", val);
+        // // Grab the first value
+        // current_char = line; // current_char now points to first char of line
+        // val = atof(current_char); // convert char that current_char points to a double
+        // printf("val = %f\n", val);
+
+        // Now that we know how to grab the first value, we can expand upon this
+
+        // Begin Parse:
+        char* start = line; // start of current substring
+        char* end = line;  // Pointer to find the next comma
+        int part_count = 0;
+
+        while(*end != '\0' && part_count < 4) {
+            if (*end == ',') {
+                *end = '\0'; // replace comma with null terminator
+                printf("Part %d: %s\n", part_count, start);
+                part_count++;
+                start = end + 1; // Move start to the next part
+            }
+            end++;
+        }
+
+        // We need to print the last part manually here because there are no more commas
+        if (*start != '\0' && part_count < 4) {
+            printf("Part %d: %s\n", part_count, start);
+            part_count++;
+        }
+
+
     }
 
     fclose(fp);
