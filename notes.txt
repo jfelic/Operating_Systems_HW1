@@ -1,4 +1,21 @@
 lines.txt:
 - A line is defined by two points
 - Each point is separated by a comma
-- 
+
+// C data structure for representing a point
+typedef struct {
+  double x;
+  double y;
+} point_t;      // can now declare a point type variable like so:  point_t p;
+
+// C data structure for representing a line
+typedef struct {
+  point_t p0;
+  point_t p1;
+} line_t;       // can now declare a line type variable like so:   line_t l;
+
+We need to allocate dynamic memory for the line array of size TOTAL_LINES
+- TOTAL_LINES = 10
+
+line_t* line_array = (lint_t*)malloc(TOTAL_LINES * sizeof(line_t));
+

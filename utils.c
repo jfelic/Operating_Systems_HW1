@@ -34,8 +34,6 @@ int read_lines(char* filename, line_t* line_arr, int n) {
     FILE* fp;
     char line[256];
     int line_count = 0;
-    // char* current_char; // current char
-    // double val;
 
     fp = fopen(filename, "r");
     if (fp == NULL) {
@@ -44,7 +42,6 @@ int read_lines(char* filename, line_t* line_arr, int n) {
     }
     
     while(fgets(line, 255, fp) != NULL && line_count < n) {
-        line_count++;
 
         // // Grab the first value
         // current_char = line; // current_char now points to first char of line
@@ -56,12 +53,14 @@ int read_lines(char* filename, line_t* line_arr, int n) {
         // Begin Parse:
         char* start = line; // start of current substring
         char* end = line;  // Pointer to find the next comma
+        double values[4]; // array to store the 4 parsed values
         int part_count = 0;
 
         while(*end != '\0' && part_count < 4) {
-            if (*end == ',') {
+            if (*end == ',' || *end == '\n') {
                 *end = '\0'; // replace comma with null terminator
                 printf("Part %d: %s\n", part_count, start);
+                values[part_count] = atof(start);
                 part_count++;
                 start = end + 1; // Move start to the next part
             }
@@ -71,13 +70,23 @@ int read_lines(char* filename, line_t* line_arr, int n) {
         // We need to print the last part manually here because there are no more commas
         if (*start != '\0' && part_count < 4) {
             printf("Part %d: %s\n", part_count, start);
+            values[part_count] = atof(start);
             part_count++;
         }
 
-
+        // Check that we parsed correct # of parts
+        if (part_count == 4) {
+            // Store parsed values in the line_arr
+            line_arr[line_count].p0.x = values[0];
+            line_arr[line_count].p0.y = values[1];
+            line_arr[line_count].p1.x = values[2];
+            line_arr[line_count].p1.y = values[3];
+            line_count++; // Now we increment line_count
+        } else {
+            printf("Warning: line %d did not have exactly 4 values\n", line_count + 1);
+        }
     }
 
-    fclose(fp);
-
-    return 0;
+    fclose(fp); // Close the file
+    return line_count; // Return the total number of lines read
 }
